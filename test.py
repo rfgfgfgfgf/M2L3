@@ -1,9 +1,8 @@
 # Задание 2 - Импортируй нужные классы
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-
 class Question:
 
-    def __init__(self, text, answer_id, *options):
+    def init(self, text, answer_id, *options):
         self.__text = text
         self.__answer_id = answer_id
         self.options = options
@@ -12,19 +11,19 @@ class Question:
     @property
     def get_real_name(self):
             return self.__real_name
-    
+
 
     def gen_markup(self):
         # Задание 3 - Создай метод для генерации Inline клавиатуры
         markup = InlineKeyboardMarkup()
-        markup.row_width = len(self.options)
+        markup.row_width =len(self.options)
 
         for i, option in enumerate(self.options):
             if i == self.__answer_id:
                 markup.add(InlineKeyboardButton(option, callback_data='correct'))
-        else:
-            markup.add(InlineKeyboardButton(option, callback_data='wrong'))
-            return markup
+            else:
+                markup.add(InlineKeyboardButton (option, callback_data='wrong'))
+        return markup
 
 # Задание 4 - заполни список своими вопросами
 quiz_questions = [

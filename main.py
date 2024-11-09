@@ -1,12 +1,12 @@
-
 import telebot
 from config import token
 # Задание 7 - испортируй команду defaultdict
+import defaultdict
 from logic import quiz_questions
 
 user_responses = {} 
 # Задание 8 - создай словарь points для сохранения количества очков пользователя
-
+points = defaultdict(int)
 bot = telebot.TeleBot(token)
 
 def send_question(chat_id):
@@ -18,13 +18,18 @@ def callback_query(call):
     if call.data == "correct":
         bot.answer_callback_query(call.id, "Answer is correct")
         # Задание 9 - добавь очки пользователю за правильный ответ
+        points[chat_id_user] += 1
+        return points
     elif call.data == "wrong":
         bot.answer_callback_query(call.id,  "Answer is wrong")
       
     # Задание 5 - реализуй счетчик вопросов
-
+    user_responses[call.message.chat.id]+=1
     # Задание 6 - отправь пользователю сообщение с количеством его набранных очков, если он ответил на все вопросы, а иначе отправь следующий вопрос
-
+    if user_responses[call.message.chat.id]>=len(quiz_questions):
+        bot.send_message(call.message.chat.id, "The end")
+    else:
+        send_question(call.message.chat.id)
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -32,5 +37,5 @@ def start(message):
         user_responses[message.chat.id] = 0
         send_question(message.chat.id)
 
-
+print('bot is ready!')
 bot.infinity_polling()
